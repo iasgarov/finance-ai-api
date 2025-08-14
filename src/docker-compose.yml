@@ -17,20 +17,25 @@ services:
     networks:
       - backend
 
-  db:
-    image: ankane/pgvector:latest
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: iasgarov
-      POSTGRES_PASSWORD: Az010203
-      POSTGRES_DB: ragDb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
+db:
+  image: ankane/pgvector:latest
+  container_name: postgres-db
+  restart: always
+  environment:
+    POSTGRES_USER: iasgarov
+    POSTGRES_PASSWORD: Az010203
+    POSTGRES_DB: ragDb
+  ports:
+    - "5432:5432"
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+  networks:
+    - backend
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U iasgarov -d ragDb"]
+    interval: 5s
+    timeout: 5s
+    retries: 5
 
   pgadmin:
     image: dpage/pgadmin4
